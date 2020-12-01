@@ -22,13 +22,6 @@ namespace MayoMatic
         float m_CurrentPlayerAngle = 0;
         float m_CurrentGapPercentage = 0;
 
-
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
-
         // Update is called once per frame
         void Update()
         {
@@ -67,6 +60,8 @@ namespace MayoMatic
                 m_CurrentGapPercentage = 1 - m_CurrentGapPercentage;
             }
 
+            // Go from [0,0.5] to [0, 1]
+            m_CurrentGapPercentage *= 2; 
         }
 
         void DisplayPlayer()
@@ -76,7 +71,7 @@ namespace MayoMatic
                 Vector3[] positions = { Vector3.zero, (new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0)).normalized * 2 };
                 m_PlayerLineRenderer.SetPositions(positions);
 
-                Color playerColor = Color.green * (1 - m_CurrentGapPercentage * 2) + Color.red * m_CurrentGapPercentage * 2;
+                Color playerColor = Color.green * (1 - m_CurrentGapPercentage) + Color.red * m_CurrentGapPercentage;
                 m_PlayerLineRenderer.startColor = playerColor;
                 m_PlayerLineRenderer.endColor = playerColor;
             }
@@ -102,6 +97,11 @@ namespace MayoMatic
             // Player vector
             Gizmos.color = Color.magenta;
             Gizmos.DrawLine(transform.position, transform.position + new Vector3(Mathf.Cos(m_CurrentPlayerAngle), Mathf.Sin(m_CurrentPlayerAngle), 0));
+        }
+
+        public float GetCurrentGap()
+        {
+            return m_CurrentGapPercentage;
         }
     }
 
