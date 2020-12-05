@@ -67,6 +67,7 @@ namespace MayoMatic
                 m_Score = 0;
                 m_AverageGap = 0;
                 m_TimeSinceStart = 0;
+                m_IngredientLastScore = 0;
             }
         }
 
