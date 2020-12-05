@@ -52,7 +52,7 @@ namespace MayoMatic
         {
             m_CurrentGapPercentage = Mathf.Abs(m_CurrentPlayerAngle - m_TargetAngle) / (2*Mathf.PI);
 
-            Debug.Log("Compute gap before correcting : \nCurrentPlayer: " + m_CurrentPlayerAngle + "\nTargetAngle: " + m_TargetAngle + "\nGap: " + m_CurrentGapPercentage);
+            //Debug.Log("Compute gap before correcting : \nCurrentPlayer: " + m_CurrentPlayerAngle + "\nTargetAngle: " + m_TargetAngle + "\nGap: " + m_CurrentGapPercentage);
 
             // Get the acute angle
             if (m_CurrentGapPercentage > 0.5f)
