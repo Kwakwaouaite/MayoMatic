@@ -1,10 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using MidiParser;
 
 namespace MayoMatic
 {
+    [System.Serializable]
+    public class NoteData {
+        public Note prefab;
+        public int midiValue;
+    }
+
     public class Ingredients : MonoBehaviour
     {
         public ScoreManager scoreManager;
@@ -24,11 +31,11 @@ namespace MayoMatic
             }
         }
 
-        [Header("Note Prefabs")]
-        public Note ANote;
-        public Note BNote;
-        public Note YNote;
-        public Note XNote;
+        [Header("Note Data")]
+        public NoteData ANote;
+        public NoteData BNote;
+        public NoteData YNote;
+        public NoteData XNote;
 
         [Header("Steam")]
         public Transform StartStream;
@@ -64,7 +71,10 @@ namespace MayoMatic
             Stack<MidiEvent> reversedStreamNotes = new Stack<MidiEvent>(soundManager.Notes);
             while (reversedStreamNotes.Count != 0) {
                 MidiEvent midi = reversedStreamNotes.Pop();
-                Note newNote = ANote;
+                Note newNote = midi.Note == ANote.midiValue ? ANote.prefab : 
+                               midi.Note == BNote.midiValue ? BNote.prefab : 
+                               midi.Note == YNote.midiValue ? YNote.prefab : 
+                               XNote.prefab;
                 Note note = Instantiate(newNote, new Vector2(-midi.Time / tightening, transform.position.y), Quaternion.identity, stream);
                 note.PlayTime = midi.Time;
                 note.gameObject.SetActive(false);

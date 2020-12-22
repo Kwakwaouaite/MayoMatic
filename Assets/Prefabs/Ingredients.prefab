@@ -76,15 +76,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreManager: {fileID: 0}
-  tempo: 1
-  speed: 5
-  ANote: {fileID: 6594649822873210909, guid: b61e2166a64674541bc1c66d64a10c14, type: 3}
-  BNote: {fileID: 9102082822527356199, guid: 04ebc9d41332fee4f93e5007a83d1145, type: 3}
-  YNote: {fileID: 275856749772065742, guid: 269e0793e50c4df4cb281d10d19ad4e3, type: 3}
-  XNote: {fileID: 4136049748922858158, guid: 8913737fa3d247b42a9b23912bfc9a71, type: 3}
+  soundManager: {fileID: 0}
+  ANote:
+    prefab: {fileID: 6594649822873210909, guid: b61e2166a64674541bc1c66d64a10c14, type: 3}
+    midiValue: 69
+  BNote:
+    prefab: {fileID: 9102082822527356199, guid: 04ebc9d41332fee4f93e5007a83d1145, type: 3}
+    midiValue: 0
+  YNote:
+    prefab: {fileID: 275856749772065742, guid: 269e0793e50c4df4cb281d10d19ad4e3, type: 3}
+    midiValue: 0
+  XNote:
+    prefab: {fileID: 4136049748922858158, guid: 8913737fa3d247b42a9b23912bfc9a71, type: 3}
+    midiValue: 0
   StartStream: {fileID: 8090731260741872285}
   EndStream: {fileID: 8090731260994706375}
-  activeNoteOffset: 1
+  tightening: 500
+  activeTimeOffset: 1000
   noteYDestruction: 0
 --- !u!1 &8090731260994706374
 GameObject:
