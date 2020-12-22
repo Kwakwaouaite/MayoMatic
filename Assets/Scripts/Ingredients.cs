@@ -1,18 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MidiParser;
 
 namespace MayoMatic
 {
     public class Ingredients : MonoBehaviour
     {
         public ScoreManager scoreManager;
-
-        [Header("Stream")]
-        [Min(0)]
-        public float tempo = 1;
-        [Min(0)]
-        public float speed = 1;
+        public SoundManager soundManager;
         
         private bool activated = true;
         public bool Activated {
@@ -20,9 +16,9 @@ namespace MayoMatic
             set {
                 if(value = activated) return;
                 if(value){
-                    coroutine = StartCoroutine(IngredientStream());
+                    //coroutine = StartCoroutine(IngredientStream());
                 }else{
-                    StopCoroutine(coroutine);
+                    //StopCoroutine(coroutine);
                 }
                 activated = value;
             }
@@ -34,47 +30,65 @@ namespace MayoMatic
         public Note YNote;
         public Note XNote;
 
-        [Header("Steam position")]
+        [Header("Steam")]
         public Transform StartStream;
         public Transform EndStream;
         [Min(0)]
-        public float activeNoteOffset = 1;
+        public float tightening = 500;
+        public float activeTimeOffset = 1000;
 
         [Header("Note played")]
         public float noteYDestruction = 0;
 
-        private List<Note> notes;
+        private Stack<Note> notes;
         private List<Note> notesPlayed;
-        private Note activeNote;
+        private List<Note> notesMissed;
 
-        private Coroutine coroutine = null;
+        //private Coroutine coroutine = null;
 
-        private float streamCenter;
-        private float streamRadius;
+        //private float streamCenter;
+        //private float streamRadius;
+        private Transform stream;
 
-        //Temp
-        private int step;
+        private int streamBPM;
 
         private void Start()
         {
-            if(activated && coroutine == null) {
-                coroutine = StartCoroutine(IngredientStream()); 
+            /*streamCenter = Mathf.Lerp(StartStream.position.x, EndStream.position.x, 0.5f);
+            streamRadius = (Mathf.Abs(StartStream.position.x) + Mathf.Abs(EndStream.position.x)) / 2;*/
+            stream = new GameObject("Stream").transform;
+            stream.parent = transform;
+            stream.position = transform.position;
+
+            notes = new Stack<Note>();
+            Stack<MidiEvent> reversedStreamNotes = new Stack<MidiEvent>(soundManager.Notes);
+            while (reversedStreamNotes.Count != 0) {
+                MidiEvent midi = reversedStreamNotes.Pop();
+                Note newNote = ANote;
+                Note note = Instantiate(newNote, new Vector2(-midi.Time / tightening, transform.position.y), Quaternion.identity, stream);
+                note.PlayTime = midi.Time;
+                note.gameObject.SetActive(false);
+                notes.Push(note);
             }
 
-            streamCenter = Mathf.Lerp(StartStream.position.x, EndStream.position.x, 0.5f);
-            streamRadius = (Mathf.Abs(StartStream.position.x) + Mathf.Abs(EndStream.position.x)) / 2;
-
-            notes = new List<Note>();
             notesPlayed = new List<Note>();
+            notesMissed = new List<Note>();
+            streamBPM = soundManager.BPM;
+
+            /*if(activated && coroutine == null) {
+                coroutine = StartCoroutine(IngredientStream()); 
+            }*/
         }
 
-        private IEnumerator IngredientStream () {
+        /*private IEnumerator IngredientStream () {
             while(activated) {
-                yield return new WaitForSeconds(tempo);
+                yield return new WaitForSeconds(1 / (streamBPM / 60));
+                float time =  Time.time * 1000;
+                Debug.Log(time);
 
                 //TODO utiliser une piste musicale
                 //Temp
-                Note newNote = step == 0 ? ANote : step == 1 ? BNote : step == 2 ? YNote : XNote;
+                /*Note newNote = step == 0 ? ANote : step == 1 ? BNote : step == 2 ? YNote : XNote;
                 ++step;
 
                 if(step == 4){
@@ -85,9 +99,10 @@ namespace MayoMatic
                 note.speed = speed;
                 notes.Add(note);
             }
-        }
+        }*/
 
         private void Update () {
+            stream.position = new Vector2(Time.time * 1000 / tightening, stream.position.y);
             UpdateNote();
             CheckInput();
         }
@@ -95,18 +110,36 @@ namespace MayoMatic
         private void UpdateNote () {
             List<Note> notesToDestroy = new List<Note>();
 
+            if(notes.Count != 0){
+                Note activeNote = notes.Peek();
+                float time = Time.time * 1000;
+                if(!activeNote.Playable && Time.time * 1000 + activeTimeOffset / 2 > activeNote.PlayTime){
+                    activeNote.Playable = true;
+                }
+                else if(Time.time * 1000 - activeTimeOffset / 2 > activeNote.PlayTime){
+                    activeNote.Playable = false;
+                    notes.Pop();
+                    notesMissed.Add(activeNote);
+                }
+            }
+
             foreach(Note note in notes) {
+                float posX = note.transform.position.x;
+                if(posX > StartStream.position.x){
+                    note.gameObject.SetActive(true);
+                }
+            }
+
+            foreach(Note note in notesMissed) {
                 float posX = note.transform.position.x;
 
                 if(posX > EndStream.position.x){
                     notesToDestroy.Add(note);
-                }else if(Mathf.Abs(posX) <= activeNoteOffset){
-                    SetActiveNote(note, true);
                 }
             }
 
             foreach(Note note in notesToDestroy){
-                notes.Remove(note);
+                notesMissed.Remove(note);
                 Destroy(note.gameObject);
             }
             notesToDestroy.Clear();
@@ -122,31 +155,27 @@ namespace MayoMatic
                 Destroy(note.gameObject);
             }
             notesToDestroy.Clear();
-
-            if(activeNote){
-                if(Mathf.Abs(activeNote.transform.position.x) > activeNoteOffset){
-                    SetActiveNote(activeNote, false);
-                }
-            }
         }
 
         private void CheckInput () {
+            if(notes.Count == 0) return;
+            Note activeNote = notes.Peek();
+
             bool aPressed = Input.GetButtonDown("ANote");
             bool bPressed = Input.GetButtonDown("BNote");
             bool yPressed = Input.GetButtonDown("YNote");
             bool xPressed = Input.GetButtonDown("XNote");
 
             if(aPressed || bPressed || yPressed || xPressed){
-                if(!activeNote){
-                    WrongInput();
-                    return;
-                }
-
                 NoteType noteType = activeNote.Type;
 
                 if((aPressed && noteType == NoteType.A) || (bPressed && noteType == NoteType.B) ||
                    (yPressed && noteType == NoteType.Y) || (xPressed && noteType == NoteType.X)) {
-                    GoodInput();
+                    if(activeNote.Playable){
+                        GoodInput();
+                    }else{
+                        WrongInput();
+                    }
                 }else{
                     WrongInput();
                 }
@@ -154,25 +183,25 @@ namespace MayoMatic
         }
 
         private void GoodInput () {
-            if(scoreManager) scoreManager.IngredientAdded(1 - Mathf.Abs(activeNote.transform.position.x - streamCenter) / activeNoteOffset);
+            Note activeNote = notes.Pop();
+            if(scoreManager) scoreManager.IngredientAdded(1 - Mathf.Abs(Time.time * 1000 - activeNote.PlayTime) / activeTimeOffset * 2);
 
-            notes.Remove(activeNote);
+            activeNote.transform.parent = transform.parent;
             activeNote.Play();
             notesPlayed.Add(activeNote);
-            SetActiveNote(activeNote, false);
         }
 
         private void WrongInput () {
             //TODO
         }
 
-        private void SetActiveNote (Note note, bool active) {
+        /*private void SetActiveNote (Note note, bool active) {
             note.Playable = active;
             if(active){
                 activeNote = note;
             }else{
                 activeNote = null;
             }
-        }
+        }*/
     }
 }

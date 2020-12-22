@@ -19,7 +19,7 @@ namespace MayoMatic
         public NoteType Type {get{return type;}}
 
         [HideInInspector]
-        public float speed;
+        public float PlayTime;
 
         [SerializeField]
         [Min(0)]
@@ -35,14 +35,9 @@ namespace MayoMatic
         bool played = false;
         private float playedTime;
 
-        public Note (float speed) {
-            this.speed = speed;
-
-        }
-
         private void Update () {
             if(!played){
-                transform.position += Vector3.right * speed * Time.deltaTime;
+                //transform.position += Vector3.right * speed * Time.deltaTime;
             }else{
                 transform.position += Vector3.up * fallVelocity * Time.deltaTime;
                 fallVelocity -= fallSpeed * Time.deltaTime;
@@ -50,6 +45,7 @@ namespace MayoMatic
         }
 
         public bool Playable {
+            get{return text.color == Color.white;}
             set {
                 if(value){
                     text.color = Color.white;
