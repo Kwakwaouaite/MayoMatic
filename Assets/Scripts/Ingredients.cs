@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+using System.Linq;
 using MidiParser;
 
 namespace MayoMatic
@@ -9,7 +9,7 @@ namespace MayoMatic
     [System.Serializable]
     public class NoteData {
         public Note prefab;
-        public int midiValue;
+        public int midiTrack;
     }
 
     public class Ingredients : MonoBehaviour
@@ -41,7 +41,7 @@ namespace MayoMatic
         public Transform StartStream;
         public Transform EndStream;
         [Min(0)]
-        public float tightening = 500;
+        public double tightening = 500;
         public float activeTimeOffset = 1000;
 
         [Header("Note played")]
@@ -68,18 +68,25 @@ namespace MayoMatic
             stream.position = transform.position;
 
             notes = new Stack<Note>();
-            Stack<MidiEvent> reversedStreamNotes = new Stack<MidiEvent>(soundManager.Notes);
-            while (reversedStreamNotes.Count != 0) {
-                MidiEvent midi = reversedStreamNotes.Pop();
-                Note newNote = midi.Note == ANote.midiValue ? ANote.prefab : 
-                               midi.Note == BNote.midiValue ? BNote.prefab : 
-                               midi.Note == YNote.midiValue ? YNote.prefab : 
-                               XNote.prefab;
-                Note note = Instantiate(newNote, new Vector2(-midi.Time / tightening, transform.position.y), Quaternion.identity, stream);
-                note.PlayTime = midi.Time;
-                note.gameObject.SetActive(false);
-                notes.Push(note);
-            }
+            MidiTrack[] tracks = soundManager.Tracks;
+
+            CreateNotesFromTrack(tracks[ANote.midiTrack], ANote.prefab);
+            CreateNotesFromTrack(tracks[BNote.midiTrack], BNote.prefab);
+            CreateNotesFromTrack(tracks[YNote.midiTrack], YNote.prefab);
+            CreateNotesFromTrack(tracks[XNote.midiTrack], XNote.prefab);
+
+            Stack<Note> sortNotes = new Stack<Note>(); 
+            while (notes.Count > 0) { 
+                Note tmp = notes.Pop(); 
+        
+                while (sortNotes.Count > 0 && sortNotes.Peek().PlayTime < tmp.PlayTime) 
+                {  
+                    notes.Push(sortNotes.Pop()); 
+                } 
+        
+                sortNotes.Push(tmp); 
+            } 
+            notes = sortNotes;
 
             notesPlayed = new List<Note>();
             notesMissed = new List<Note>();
@@ -88,6 +95,18 @@ namespace MayoMatic
             /*if(activated && coroutine == null) {
                 coroutine = StartCoroutine(IngredientStream()); 
             }*/
+        }
+
+        private void CreateNotesFromTrack (MidiTrack track, Note notePrefab){
+            Stack<MidiEvent> reversedStreamNotes = new Stack<MidiEvent>(track.MidiEvents.Where(midiEvent => midiEvent.MidiEventType == MidiEventType.NoteOn));
+            while (reversedStreamNotes.Count != 0) {
+                MidiEvent midi = reversedStreamNotes.Pop();
+                float time = (float)(midi.Time * soundManager.TicksToMs);
+                Note note = Instantiate(notePrefab, new Vector2((float)(-time / tightening), transform.position.y), Quaternion.identity, stream);
+                note.PlayTime = time;
+                note.gameObject.SetActive(false);
+                notes.Push(note);
+            }
         }
 
         /*private IEnumerator IngredientStream () {
@@ -112,7 +131,7 @@ namespace MayoMatic
         }*/
 
         private void Update () {
-            stream.position = new Vector2(Time.time * 1000 / tightening, stream.position.y);
+            stream.position = new Vector2((float)(soundManager.MusicTime / tightening), stream.position.y);
             UpdateNote();
             CheckInput();
         }
@@ -122,11 +141,11 @@ namespace MayoMatic
 
             if(notes.Count != 0){
                 Note activeNote = notes.Peek();
-                float time = Time.time * 1000;
-                if(!activeNote.Playable && Time.time * 1000 + activeTimeOffset / 2 > activeNote.PlayTime){
+                float time = soundManager.MusicTime;
+                if(!activeNote.Playable && time + activeTimeOffset / 2 > activeNote.PlayTime){
                     activeNote.Playable = true;
                 }
-                else if(Time.time * 1000 - activeTimeOffset / 2 > activeNote.PlayTime){
+                else if(time - activeTimeOffset / 2 > activeNote.PlayTime){
                     activeNote.Playable = false;
                     notes.Pop();
                     notesMissed.Add(activeNote);
@@ -194,7 +213,7 @@ namespace MayoMatic
 
         private void GoodInput () {
             Note activeNote = notes.Pop();
-            if(scoreManager) scoreManager.IngredientAdded(1 - Mathf.Abs(Time.time * 1000 - activeNote.PlayTime) / activeTimeOffset * 2);
+            if(scoreManager) scoreManager.IngredientAdded(1 - Mathf.Abs(soundManager.MusicTime - activeNote.PlayTime) / activeTimeOffset * 2);
 
             activeNote.transform.parent = transform.parent;
             activeNote.Play();

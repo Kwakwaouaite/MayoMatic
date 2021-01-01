@@ -67,7 +67,7 @@ namespace MayoMatic
             }
 
             m_FramePlayerAngleSpeed = angleThisFrame / Time.deltaTime;
-            Debug.Log("Speed: " + m_FramePlayerAngleSpeed);
+            //Debug.Log("Speed: " + m_FramePlayerAngleSpeed);
 
             m_CurrentPlayerAngle = newPlayerAngle;
         }
