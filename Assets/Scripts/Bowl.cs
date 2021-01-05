@@ -18,6 +18,9 @@ namespace MayoMatic
         [SerializeField]
         Transform m_TargetTransform;
 
+        [SerializeField]
+        LineRenderer m_TargetLineRenderer;
+
         float m_TargetAngle = 0;
         float m_CurrentPlayerAngle = 0;
 
@@ -98,8 +101,15 @@ namespace MayoMatic
         {
             if (m_TargetTransform)
             {
-                m_TargetTransform.localPosition = new Vector3(0, Mathf.Sign(Mathf.Sin(m_TargetAngle)) *  0.5f + 0.5f * Mathf.Sin(m_TargetAngle), 0);
-                m_TargetTransform.localEulerAngles = new Vector3(0, 0, m_TargetAngle * Mathf  .Rad2Deg); 
+                //m_TargetTransform.localPosition = new Vector3(0, Mathf.Sign(Mathf.Sin(m_TargetAngle)) * 0.5f + 0.5f * Mathf.Sin(m_TargetAngle), 0);
+                //m_TargetTransform.localEulerAngles = new Vector3(0, 0, m_TargetAngle * Mathf.Rad2Deg);
+            }
+
+            if (m_TargetLineRenderer && m_TargetTransform)
+            {
+
+                // m_TargetTransform
+                m_TargetLineRenderer.SetPositions( new Vector3[] { m_TargetTransform.position, m_TargetTransform.position + new Vector3(Mathf.Cos(m_TargetAngle) * 3.5f, Mathf.Sin(m_TargetAngle) * 1.5f, 0) } );
             }
         }
 
