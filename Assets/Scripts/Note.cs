@@ -26,6 +26,9 @@ namespace MayoMatic
         private float fallSpeed = 15;
         [SerializeField]
         [Min(0)]
+        private float fallRotateSpeed = 10;
+        [SerializeField]
+        [Min(0)]
         private float playJumpForce = 5;
         [SerializeField]
         private Text text = null;
@@ -41,6 +44,10 @@ namespace MayoMatic
             }else{
                 transform.position += Vector3.up * fallVelocity * Time.deltaTime;
                 fallVelocity -= fallSpeed * Time.deltaTime;
+
+                if(fallVelocity < 0) {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 180), fallRotateSpeed * Time.deltaTime);
+                }
             }
         }
 

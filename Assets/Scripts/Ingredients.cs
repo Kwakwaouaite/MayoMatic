@@ -45,7 +45,7 @@ namespace MayoMatic
         public float activeTimeOffset = 1000;
 
         [Header("Note played")]
-        public float noteYDestruction = 0;
+        public Transform noteDestructionHeight = null;
 
         private Stack<Note> notes;
         private List<Note> notesPlayed;
@@ -174,7 +174,7 @@ namespace MayoMatic
             notesToDestroy.Clear();
 
             foreach(Note note in notesPlayed) {
-                if(note.transform.position.y < noteYDestruction){
+                if(note.transform.position.y < noteDestructionHeight.transform.position.y){
                     notesToDestroy.Add(note);
                 }
             }

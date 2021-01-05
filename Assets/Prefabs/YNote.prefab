@@ -226,7 +226,8 @@ MonoBehaviour:
   type: 2
   PlayTime: 0
   fallSpeed: 15
-  playJumpForce: 5
+  fallRotateSpeed: 7.5
+  playJumpForce: 6
   text: {fileID: 142152242454947140}
 --- !u!1 &3008175617975995960
 GameObject:
