@@ -314,9 +314,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8090731260741872285, guid: 508cc872236151943832dadc58e55f83, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -21
+      objectReference: {fileID: 0}
     - target: {fileID: 8090731260918703488, guid: 508cc872236151943832dadc58e55f83, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 4.75
       objectReference: {fileID: 0}
     - target: {fileID: 8090731260918703488, guid: 508cc872236151943832dadc58e55f83, type: 3}
       propertyPath: m_LocalPosition.y
@@ -381,6 +385,10 @@ PrefabInstance:
     - target: {fileID: 8090731260918703491, guid: 508cc872236151943832dadc58e55f83, type: 3}
       propertyPath: m_Name
       value: Ingredients
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090731260994706375, guid: 508cc872236151943832dadc58e55f83, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 508cc872236151943832dadc58e55f83, type: 3}
