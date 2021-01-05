@@ -32,6 +32,8 @@ namespace MayoMatic
         private float playJumpForce = 5;
         [SerializeField]
         private Text text = null;
+        [SerializeField]
+        private GameObject button = null;
 
         private float fallVelocity = 0;
 
@@ -66,6 +68,7 @@ namespace MayoMatic
             played = true;
             fallVelocity = playJumpForce;
             playedTime = Time.time;
+            Destroy(button);
         }
     }
 }
