@@ -45,7 +45,7 @@ namespace MayoMatic
         public float activeTimeOffset = 1000;
 
         [Header("Note played")]
-        public float noteYDestruction = 0;
+        public Transform noteDestructionHeight = null;
 
         private Stack<Note> notes;
         private List<Note> notesPlayed;
@@ -102,7 +102,7 @@ namespace MayoMatic
             while (reversedStreamNotes.Count != 0) {
                 MidiEvent midi = reversedStreamNotes.Pop();
                 float time = (float)(midi.Time * soundManager.TicksToMs);
-                Note note = Instantiate(notePrefab, new Vector2((float)(-time / tightening), transform.position.y), Quaternion.identity, stream);
+                Note note = Instantiate(notePrefab, new Vector2(transform.position.x + (float)(-time / tightening), transform.position.y), Quaternion.identity, stream);
                 note.PlayTime = time;
                 note.gameObject.SetActive(false);
                 notes.Push(note);
@@ -131,7 +131,7 @@ namespace MayoMatic
         }*/
 
         private void Update () {
-            stream.position = new Vector2((float)(soundManager.MusicTime / tightening), stream.position.y);
+            stream.position = new Vector2(transform.position.x + (float)(soundManager.MusicTime / tightening), stream.position.y);
             UpdateNote();
             CheckInput();
         }
@@ -174,7 +174,7 @@ namespace MayoMatic
             notesToDestroy.Clear();
 
             foreach(Note note in notesPlayed) {
-                if(note.transform.position.y < noteYDestruction){
+                if(note.transform.position.y < noteDestructionHeight.transform.position.y){
                     notesToDestroy.Add(note);
                 }
             }
