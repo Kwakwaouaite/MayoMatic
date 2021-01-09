@@ -536,7 +536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5762cb2859d360345ac1e6af89de155d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AngleSpeed: 180
+  m_AngleSpeed: 240.00002
   m_PlayerTransform: {fileID: 1343030515721465316}
   m_TargetTransform: {fileID: 1343030513962926143}
   m_TargetLineRenderer: {fileID: 1915908858610046141}

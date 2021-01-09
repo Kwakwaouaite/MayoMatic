@@ -27,6 +27,8 @@ namespace MayoMatic
         float m_CurrentGapPercentage = 0;
         float m_FramePlayerAngleSpeed = 0;
 
+        bool m_HasStarted = false;
+
         Vector3 m_PlayerInitialRotation;
 
         private void Start()
@@ -35,16 +37,27 @@ namespace MayoMatic
             {
                 m_PlayerInitialRotation = m_PlayerTransform.localEulerAngles; 
             }
+
+            m_HasStarted = false;
+        }
+
+        public void StartBowl()
+        {
+            m_HasStarted = true;
         }
 
         // Update is called once per frame
         void Update()
         {
-            UpdateAngles();
-            ComputeGap();
+            if (m_HasStarted)
+            {
+                UpdateAngles();
+                ComputeGap();
+
+                DisplayTarget();
+            }
 
             DisplayPlayer();
-            DisplayTarget();
         }
 
         void UpdateAngles()

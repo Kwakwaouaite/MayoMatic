@@ -18,6 +18,8 @@ namespace MayoMatic
         public int BPM;
         public float musicOffset = 0.3f;
 
+        private bool m_HasStarted;
+
         private float songPosition;
 
         private float dspSongTime;
@@ -48,14 +50,26 @@ namespace MayoMatic
             musicSource = GetComponent<AudioSource>();
         }
 
-        private void Start () {
-            dspSongTime = (float)AudioSettings.dspTime + 1;
-            musicSource.PlayScheduled(dspSongTime);
+        private void Start () 
+        {
+        }
+
+        public void StartMusic()
+        {
+            if (!m_HasStarted)
+            {
+                m_HasStarted = true;
+                dspSongTime = (float)AudioSettings.dspTime + 1;
+                musicSource.PlayScheduled(dspSongTime);
+            }
         }
 
         void Update()
         {
-            songPosition = (float)(AudioSettings.dspTime - dspSongTime - musicOffset);
+            if (m_HasStarted)
+            {
+                songPosition = (float)(AudioSettings.dspTime - dspSongTime - musicOffset);
+            }
         }
     }
 
