@@ -15,6 +15,9 @@ namespace MayoMatic
         [SerializeField]
         private Bowl m_Bowl;
 
+        [SerializeField]
+        private GameObject m_PressStartGO;
+
         enum GameState
         {
             Beginning,
@@ -34,6 +37,7 @@ namespace MayoMatic
         void Start()
         {
             GoToBeginingState();
+            m_PressStartGO.SetActive(true);
         }
 
         // Update is called once per frame
@@ -63,7 +67,12 @@ namespace MayoMatic
 
         void UpdateBeginning()
         {
-            GoToCountdownState();
+            if (Input.GetButtonDown("ANote"))
+            {
+                GoToCountdownState();
+                m_PressStartGO.SetActive(false);
+            }
+
         }
 
         void GoToCountdownState()
