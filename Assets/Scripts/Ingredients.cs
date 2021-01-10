@@ -143,7 +143,7 @@ namespace MayoMatic
         private void Update () {
             stream.position = new Vector2(transform.position.x + (float)(soundManager.MusicTime / tightening), stream.position.y);
             UpdateNote();
-            CheckInput();
+            //CheckInput();
         }
         
         private void UpdateNote () {
@@ -196,16 +196,16 @@ namespace MayoMatic
             notesToDestroy.Clear();
         }
 
-        private void CheckInput () {
+        private void CheckInput (NoteType notePressed) {
             if(notes.Count == 0) return;
             Note activeNote = notes.Peek();
 
-            bool aPressed = Input.GetButtonDown("ANote");
-            bool bPressed = Input.GetButtonDown("BNote");
-            bool yPressed = Input.GetButtonDown("YNote");
-            bool xPressed = Input.GetButtonDown("XNote");
+            bool aPressed = notePressed == NoteType.A; //Input.GetButtonDown("ANote");
+            bool bPressed = notePressed == NoteType.B; //Input.GetButtonDown("BNote");
+            bool yPressed = notePressed == NoteType.Y; //Input.GetButtonDown("YNote");
+            bool xPressed = notePressed == NoteType.X; //Input.GetButtonDown("XNote");
 
-            if(aPressed || bPressed || yPressed || xPressed){
+            if (aPressed || bPressed || yPressed || xPressed){
                 NoteType noteType = activeNote.Type;
 
                 if((aPressed && noteType == NoteType.A) || (bPressed && noteType == NoteType.B) ||
@@ -244,5 +244,25 @@ namespace MayoMatic
                 activeNote = null;
             }
         }*/
+
+        public void OnOilButton()
+        {
+            CheckInput(NoteType.A);
+        }
+
+        public void OnSaltButton()
+        {
+            CheckInput(NoteType.X);
+        }
+
+        public void OnMustardButton()
+        {
+            CheckInput(NoteType.Y);
+        }
+
+        public void OnVinegarButton()
+        {
+            CheckInput(NoteType.B);
+        }
     }
 }

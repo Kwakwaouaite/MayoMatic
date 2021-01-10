@@ -1,11 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace MayoMatic
 { 
     public class GameManager : MonoBehaviour
-    {
+    {    
+        InputAction m_InputController;
+
+        bool m_StartIsPressed;
+        bool m_AIsPressed;
+        bool m_YIsPressed;
+
         [SerializeField]
         private float m_MusicLength = 134;
 
@@ -45,6 +53,49 @@ namespace MayoMatic
 
         private float m_CountdownStartTime;
 
+        private void Awake()
+        {
+            // Create input bindings since the auto generatd code have some errors
+            var action = new InputAction(
+                    type: InputActionType.PassThrough,
+                    binding: "<Gamepad>/start");
+
+            action.performed +=
+                ctx =>
+                {
+                    var button = (ButtonControl)ctx.control;
+                    m_StartIsPressed = button.wasPressedThisFrame;
+                };
+
+            action.Enable();
+
+            var actionA = new InputAction(
+                    type: InputActionType.PassThrough,
+                    binding: "<Gamepad>/buttonSouth");
+
+            actionA.performed +=
+                ctx =>
+                {
+                    var button = (ButtonControl)ctx.control;
+                    m_AIsPressed = button.wasPressedThisFrame;
+                };
+
+            actionA.Enable();
+
+            var actionY = new InputAction(
+                    type: InputActionType.PassThrough,
+                    binding: "<Gamepad>/buttonNorth");
+
+            actionY.performed +=
+                ctx =>
+                {
+                    var button = (ButtonControl)ctx.control;
+                    m_YIsPressed = button.wasPressedThisFrame;
+                };
+
+            actionY.Enable();
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -79,7 +130,7 @@ namespace MayoMatic
 
         void UpdateBeginning()
         {
-            if (Input.GetButtonDown("ANote"))
+            if (m_StartIsPressed)
             {
                 GoToCountdownState();
                 m_PressStartGO.SetActive(false);
@@ -120,6 +171,7 @@ namespace MayoMatic
 
         void GoToFinishedState()
         {
+            m_State = GameState.Finished;
             m_Bowl.StopBowl();
             m_ScoreManager.StopScoring();
             m_FinalScoreDisplay.DisplayScore(m_IngredientManager.GetSuceededNotes(), m_IngredientManager.GetNoteCount(), 100 - m_ScoreManager.GetAverageGap() * 100);
@@ -127,7 +179,15 @@ namespace MayoMatic
 
         void UpdateFinished()
         {
+            if (m_AIsPressed)
+            {
+                Debug.Log("Go back to menu");
+            }
 
+            if (m_YIsPressed)
+            {
+                Debug.Log("Restart");
+            }
         }
     }
 }

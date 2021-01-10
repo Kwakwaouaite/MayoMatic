@@ -6,7 +6,7 @@
             "id": "97229575-19ff-4997-9cce-e12eadb3e445",
             "actions": [
                 {
-                    "name": "Start",
+                    "name": "StartButton",
                     "type": "Button",
                     "id": "dc0dbd5d-667f-4811-91fe-bfa68b4a26cb",
                     "expectedControlType": "Button",
@@ -44,6 +44,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Joystick",
+                    "type": "Button",
+                    "id": "babad0f3-022c-4dbb-9c81-a9b88005f31c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -54,7 +62,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Start",
+                    "action": "StartButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -99,6 +107,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "VinegarButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "62bcd421-29b8-4107-be4e-9aa05dc1c589",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Joystick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

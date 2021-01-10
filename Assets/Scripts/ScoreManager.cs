@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 namespace MayoMatic
 {
@@ -90,7 +91,9 @@ namespace MayoMatic
 
             if (m_ScoreText) m_ScoreText.text = m_ScoreText.text += "\nPress 'R' to reset";
 
-            if (Input.GetKeyDown("r"))
+            Keyboard kb = InputSystem.GetDevice<Keyboard>();
+
+            if (kb.rKey.wasPressedThisFrame)
             {
                 m_Score = 0;
                 m_AverageGap = 0;

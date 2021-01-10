@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace MayoMatic
 {
@@ -30,6 +32,28 @@ namespace MayoMatic
         bool m_HasStarted = false;
 
         Vector3 m_PlayerInitialRotation;
+
+        Vector2 m_PlayerJoystick;
+
+        private void Awake()
+        {
+            var action = new InputAction(
+                type: InputActionType.Value,
+                binding: "<Gamepad>/leftStick");
+
+            action.performed +=
+                ctx =>
+                {
+                    m_PlayerJoystick = ctx.ReadValue<Vector2>();
+                };
+            action.canceled +=
+                ctx =>
+                {
+                    m_PlayerJoystick = Vector2.zero;
+                };
+
+            action.Enable();
+        }
 
         private void Start()
         {
@@ -77,8 +101,11 @@ namespace MayoMatic
                 m_TargetAngle -= 2 * Mathf.PI;
             }
 
-            float joystickX = Input.GetAxis("Horizontal");
-            float joystickY = Input.GetAxis("Vertical");
+            //float joystickX = Input.GetAxis("Horizontal");
+            //float joystickY = Input.GetAxis("Vertical");
+            
+            float joystickX = m_PlayerJoystick.x;
+            float joystickY = m_PlayerJoystick.y;
 
             float newPlayerAngle = Mathf.Atan2(joystickY, joystickX);
 
@@ -113,8 +140,12 @@ namespace MayoMatic
         {
             if (m_PlayerTransform)
             {
-                m_PlayerTransform.localPosition = new Vector3(Input.GetAxis("Horizontal") * 2, Input.GetAxis("Vertical"), 0);
-                m_PlayerTransform.eulerAngles = m_PlayerInitialRotation + Vector3.forward * Input.GetAxis("Horizontal") * 10;
+
+
+                m_PlayerTransform.localPosition = new Vector3(m_PlayerJoystick.x * 2, m_PlayerJoystick.y, 0);
+                //m_PlayerTransform.localPosition = new Vector3(Input.GetAxis("Horizontal") * 2, Input.GetAxis("Vertical"), 0);
+                m_PlayerTransform.eulerAngles = m_PlayerInitialRotation + Vector3.forward * m_PlayerJoystick.y * 10;
+                //m_PlayerTransform.eulerAngles = m_PlayerInitialRotation + Vector3.forward * Input.GetAxis("Horizontal") * 10;
             }
         }
         void DisplayTarget()

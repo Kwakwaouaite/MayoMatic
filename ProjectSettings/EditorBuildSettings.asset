@@ -11,4 +11,5 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/IngredientsPhase.unity
     guid: d15209aec4a9dbc4b8279c701a50949d
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 5f367174a0193294296cabdd64d62725, type: 2}
