@@ -27,6 +27,7 @@ namespace MayoMatic
         // Start is called before the first frame update
         public void StartCountdown(int length)
         {
+            gameObject.SetActive(true);
             m_HasStarted = true;
             m_CurrentTimeCountdown = length;
         }

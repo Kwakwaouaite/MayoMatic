@@ -18,6 +18,9 @@ namespace MayoMatic
         [SerializeField]
         private GameObject m_PressStartGO;
 
+        [SerializeField]
+        private FinalScoreDisplay m_FinalScoreDisplay;
+
         enum GameState
         {
             Beginning,
