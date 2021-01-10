@@ -28,6 +28,34 @@ namespace MayoMatic
         float m_ScorePerIngredient = 100;
         float m_IngredientLastScore = 0;
 
+        bool m_ShouldUpdateScore = false;
+
+        public void StartScoring()
+        {
+            Reset();
+            m_ShouldUpdateScore = true;
+        }
+
+        public void StopScoring()
+        {
+            m_ShouldUpdateScore = false;
+        }
+
+        public float GetAverageGap()
+        {
+            return m_AverageGap;
+        }
+
+        void Reset()
+        {
+            m_Score = 0;
+            m_AverageGap = 0;
+            m_TimeSinceStart = 0;
+            m_IngredientLastScore = 0;
+        }
+
+        
+
         // Update is called once per frame
         void LateUpdate()
         {

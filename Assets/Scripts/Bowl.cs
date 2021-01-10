@@ -44,6 +44,13 @@ namespace MayoMatic
         public void StartBowl()
         {
             m_HasStarted = true;
+            m_TargetLineRenderer.gameObject.SetActive(true);
+        }
+
+        public void StopBowl()
+        {
+            m_HasStarted = false;
+            m_TargetLineRenderer.gameObject.SetActive(false);
         }
 
         // Update is called once per frame

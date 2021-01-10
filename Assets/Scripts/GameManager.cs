@@ -7,6 +7,9 @@ namespace MayoMatic
     public class GameManager : MonoBehaviour
     {
         [SerializeField]
+        private float m_MusicLength = 134;
+
+        [SerializeField]
         private SoundManager m_SoundManager;
 
         [SerializeField]
@@ -19,7 +22,13 @@ namespace MayoMatic
         private GameObject m_PressStartGO;
 
         [SerializeField]
+        private ScoreManager m_ScoreManager;
+
+        [SerializeField]
         private FinalScoreDisplay m_FinalScoreDisplay;
+
+        [SerializeField]
+        Ingredients m_IngredientManager;
 
         enum GameState
         {
@@ -97,16 +106,23 @@ namespace MayoMatic
         void GoToPlayingState()
         {
             m_State = GameState.Playing;
+            m_ScoreManager.StartScoring();
         }
 
         void UpdatePlaying()
         {
+            if (m_SoundManager.MusicTime / 1000 > m_MusicLength)
+            {
+                GoToFinishedState();
+            }
 
         }
 
         void GoToFinishedState()
         {
-
+            m_Bowl.StopBowl();
+            m_ScoreManager.StopScoring();
+            m_FinalScoreDisplay.DisplayScore(m_IngredientManager.GetSuceededNotes(), m_IngredientManager.GetNoteCount(), 100 - m_ScoreManager.GetAverageGap() * 100);
         }
 
         void UpdateFinished()

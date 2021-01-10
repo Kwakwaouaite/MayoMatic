@@ -40,7 +40,7 @@ namespace MayoMatic
             //DisplayScore(2, 10, 92.1f);
         }
 
-        void DisplayScore(int currentIngredient, int maxIngredient, float mixPercentage)
+        public void DisplayScore(int currentIngredient, int maxIngredient, float mixPercentage)
         {
             //ActivateStars(3);
 

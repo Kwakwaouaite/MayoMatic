@@ -16,15 +16,15 @@ namespace MayoMatic
     {
         public ScoreManager scoreManager;
         public SoundManager soundManager;
-        
+
         private bool activated = true;
         public bool Activated {
-            get {return activated;}
+            get { return activated; }
             set {
-                if(value = activated) return;
-                if(value){
+                if (value = activated) return;
+                if (value) {
                     //coroutine = StartCoroutine(IngredientStream());
-                }else{
+                } else {
                     //StopCoroutine(coroutine);
                 }
                 activated = value;
@@ -59,6 +59,13 @@ namespace MayoMatic
 
         private int streamBPM;
 
+        private int m_NoteCount = 0;
+        private int m_SuccededNotes = 0;
+
+        public int GetNoteCount() {  return m_NoteCount; }
+        public int GetSuceededNotes() { return m_SuccededNotes;  }
+
+
         private void Start()
         {
             /*streamCenter = Mathf.Lerp(StartStream.position.x, EndStream.position.x, 0.5f);
@@ -91,6 +98,9 @@ namespace MayoMatic
             notesPlayed = new List<Note>();
             notesMissed = new List<Note>();
             streamBPM = soundManager.BPM;
+
+            m_NoteCount = notes.Count;
+            m_SuccededNotes = 0;
 
             /*if(activated && coroutine == null) {
                 coroutine = StartCoroutine(IngredientStream()); 
@@ -139,7 +149,7 @@ namespace MayoMatic
         private void UpdateNote () {
             List<Note> notesToDestroy = new List<Note>();
 
-            if(notes.Count != 0){
+            if(notes != null && notes.Count != 0){
                 Note activeNote = notes.Peek();
                 float time = soundManager.MusicTime;
                 if(!activeNote.Playable && time + activeTimeOffset / 2 > activeNote.PlayTime){
@@ -218,6 +228,8 @@ namespace MayoMatic
             activeNote.transform.parent = transform.parent;
             activeNote.Play();
             notesPlayed.Add(activeNote);
+
+            m_SuccededNotes += 1;
         }
 
         private void WrongInput () {
