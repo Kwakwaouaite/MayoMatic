@@ -1,0 +1,109 @@
+{
+    "name": "InputAction",
+    "maps": [
+        {
+            "name": "Mayomatic",
+            "id": "97229575-19ff-4997-9cce-e12eadb3e445",
+            "actions": [
+                {
+                    "name": "Start",
+                    "type": "Button",
+                    "id": "dc0dbd5d-667f-4811-91fe-bfa68b4a26cb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "OilButton",
+                    "type": "Button",
+                    "id": "60c33d0b-3a7b-42e1-b3a6-22053f80e5e3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "SaltButton",
+                    "type": "Button",
+                    "id": "5ace1737-32d7-4c04-808a-b05791bfe0d5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "MustardButton",
+                    "type": "Button",
+                    "id": "17e46588-1d0f-4956-8e49-b1b404f6e022",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "VinegarButton",
+                    "type": "Button",
+                    "id": "030bd09e-4ada-47f5-b8c1-04bb156ebab1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f73b6014-2657-4ee1-8425-0d3cdae94a0b",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Start",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "be898a22-2590-4e02-af1c-a040eceecc02",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OilButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "19abddc6-a795-451d-ad06-87bbb9fbf2c1",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SaltButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7113260b-fdb4-46ae-9a22-b25355f736e9",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MustardButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1740528e-fdce-4687-82f4-8080dd3cc06d",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "VinegarButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
