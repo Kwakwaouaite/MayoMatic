@@ -1979,6 +1979,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8608606180681057273, guid: dee7dfb3e9dd3394591324bff1210b62, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8608606182672212104, guid: dee7dfb3e9dd3394591324bff1210b62, type: 3}
       propertyPath: m_Ingredients
       value: 
