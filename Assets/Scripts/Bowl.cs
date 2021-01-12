@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,6 +14,16 @@ namespace MayoMatic
         /// </summary>
         [SerializeField]
         float m_AngleSpeed = 180.0f;
+
+        [SerializeField]
+        GameObject m_TurnJoystickhelp;
+
+        [SerializeField]
+        float m_TimeBeforeShowingHelp = 2.0f;
+
+        float m_NoInputJoystickTime = 0;
+
+        bool m_HelpIsDisplayed = false;
 
         [SerializeField]
         Transform m_PlayerTransform;
@@ -41,6 +52,14 @@ namespace MayoMatic
                 type: InputActionType.Value,
                 binding: "<Gamepad>/leftStick");
 
+            action.started +=
+                ctx =>
+                {
+                    ShowHelp(false);
+                    m_PlayerJoystick = ctx.ReadValue<Vector2>();
+                    m_NoInputJoystickTime = float.MinValue;
+                };
+
             action.performed +=
                 ctx =>
                 {
@@ -50,6 +69,7 @@ namespace MayoMatic
                 ctx =>
                 {
                     m_PlayerJoystick = Vector2.zero;
+                    m_NoInputJoystickTime = 0;
                 };
 
             action.Enable();
@@ -63,6 +83,7 @@ namespace MayoMatic
             }
 
             m_HasStarted = false;
+            ShowHelp(false);
         }
 
         public void StartBowl()
@@ -86,9 +107,31 @@ namespace MayoMatic
                 ComputeGap();
 
                 DisplayTarget();
+                DisplayHelp();
             }
 
             DisplayPlayer();
+            DisplayHelp();
+        }
+
+        private void DisplayHelp()
+        {
+            if (!m_HelpIsDisplayed && m_NoInputJoystickTime > m_TimeBeforeShowingHelp)
+            {
+                ShowHelp(true);
+            }
+
+            m_NoInputJoystickTime += Time.deltaTime;
+        }
+
+        private void ShowHelp( bool state)
+        {
+            m_HelpIsDisplayed = state;
+
+            if (m_TurnJoystickhelp)
+            {
+                m_TurnJoystickhelp.SetActive(state);
+            }
         }
 
         void UpdateAngles()

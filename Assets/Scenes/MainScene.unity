@@ -2644,6 +2644,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1786219495}
   - component: {fileID: 1786219496}
+  - component: {fileID: 1786219497}
   m_Layer: 0
   m_Name: PressStartToPlayPNG2
   m_TagString: Untagged
@@ -2716,6 +2717,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1786219497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786219494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d56f6fe76c837e746b0312de3f7b91d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Sprites:
+  - {fileID: 21300000, guid: b1c5b8a2a9779ce47995b3e61ab92711, type: 3}
+  - {fileID: 21300000, guid: 56d78966423bc8c4995adeeafd907479, type: 3}
+  m_SpanTime: 0.3
 --- !u!114 &1793915895 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1343030515423244519, guid: c76d37e62406c7748813224f475c5f0c, type: 3}
