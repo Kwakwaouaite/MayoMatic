@@ -69,9 +69,13 @@ namespace MayoMatic
         {
             float nbrStar = 0;
 
-            nbrStar += (currentIngredient / maxIngredient) *100 / m_PercentageStar;
+            nbrStar += ((float)currentIngredient / (float)maxIngredient) *100 / m_PercentageStar;
+
+            Debug.Log("FinalScore - nbrStar ingrédient : " + nbrStar);
 
             nbrStar += mixPercentage / m_PercentageStar;
+
+            Debug.Log("FinalScore - nbrStar mixPercentage : " + nbrStar);
 
             return Mathf.FloorToInt(nbrStar);
         }
