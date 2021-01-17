@@ -47,6 +47,9 @@ namespace MayoMatic
 
         Vector2 m_PlayerJoystick;
 
+        readonly Color m_GoodAimColor =  new Color(1, 0.9f, 0.5f);
+        readonly Color m_BadAimColor = new Color(1, 0.2f, 0);
+
         private void Awake()
         {
             var action = new InputAction(
@@ -112,7 +115,6 @@ namespace MayoMatic
             }
 
             DisplayPlayer();
-            DisplayHelp();
         }
 
         private void DisplayHelp()
@@ -189,6 +191,12 @@ namespace MayoMatic
 
         void ComputeGap()
         {
+            if (m_PlayerJoystick.magnitude < 0.1)
+            {
+                m_CurrentGapPercentage = 1;
+                return;
+            }
+
             m_CurrentGapPercentage = Mathf.Abs(m_CurrentPlayerAngle - m_TargetAngle) / (2*Mathf.PI);
 
             // Get the acute angle
@@ -226,6 +234,11 @@ namespace MayoMatic
 
                 // m_TargetTransform
                 m_TargetLineRenderer.SetPositions( new Vector3[] { m_TargetTransform.position, m_TargetTransform.position + new Vector3(Mathf.Cos(m_TargetAngle) * 3.5f, Mathf.Sin(m_TargetAngle) * 1.5f, 0) } );
+                //m_TargetLineRenderer.SetColors(Color.black, Color.red);
+
+                Color currentColor = m_CurrentGapPercentage * m_BadAimColor + (1 - m_CurrentGapPercentage) * m_GoodAimColor;
+                m_TargetLineRenderer.startColor = currentColor;
+                m_TargetLineRenderer.endColor  = currentColor;
             }
         }
 
