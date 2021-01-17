@@ -35,7 +35,9 @@ namespace MayoMatic
         private GameObject m_PauseMenu;
 
         [SerializeField]
-        private GameObject m_TutorialMenu;
+        private GameObject[] m_TutorialMenus;
+
+        private int m_CurrentTutorial = 0;
 
         [SerializeField]
         private ScoreManager m_ScoreManager;
@@ -270,24 +272,49 @@ namespace MayoMatic
             m_State = GameState.Tutorial;
             ResetAllVisible();
 
-            m_TutorialMenu?.SetActive(true);
+            m_CurrentTutorial = 0;
+            m_TutorialMenus[0]?.SetActive(true);
         }
 
         void UpdateTutorial()
         {
             if (m_AIsPressed)
             {
-                GoToBeginingState();
+                m_CurrentTutorial += 1;
+
+                if (m_TutorialMenus.Length <= m_CurrentTutorial)
+                {
+                    GoToBeginingState();
+                }
+                else
+                {
+                    ChangePageTutorial(m_CurrentTutorial); 
+                }
+
             }
+        }
+
+        void ChangePageTutorial(int index)
+        {
+            int newIndex = Mathf.Clamp(index, 0, m_TutorialMenus.Length);
+
+            ResetAllVisible();
+
+            m_TutorialMenus[index]?.SetActive(true);
         }
 
         void ResetAllVisible()
         {
             m_PauseMenu?.SetActive(false);
             m_TitleMenu?.SetActive(false);
-            m_TutorialMenu?.SetActive(false);
             m_FinalScoreDisplay.gameObject.SetActive(false);
             m_Bowl?.SetHelpEnabled(false);
+
+            foreach (GameObject menu in m_TutorialMenus)
+            {
+                menu?.SetActive(false);
+            }
+
             //TODO: add the joystick help disable;
         }
 
