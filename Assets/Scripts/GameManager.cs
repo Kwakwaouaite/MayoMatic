@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.SceneManagement;
 
 namespace MayoMatic
-{ 
+{
     public class GameManager : MonoBehaviour
-    {    
+    {
         InputAction m_InputController;
 
         bool m_StartIsPressed;
         bool m_AIsPressed;
         bool m_YIsPressed;
+        bool m_BIsPressed;
 
         [SerializeField]
         private float m_MusicLength = 134;
@@ -27,7 +29,10 @@ namespace MayoMatic
         private Bowl m_Bowl;
 
         [SerializeField]
-        private GameObject m_PressStartGO;
+        private GameObject m_TitleMenu;
+
+        [SerializeField]
+        private GameObject m_PauseMenu;
 
         [SerializeField]
         private ScoreManager m_ScoreManager;
@@ -43,7 +48,8 @@ namespace MayoMatic
             Beginning,
             Countdown,
             Playing,
-            Finished
+            Finished,
+            Paused
         }
 
         private GameState m_State;
@@ -55,12 +61,18 @@ namespace MayoMatic
 
         private void Awake()
         {
+            BindInput();
+        }
+
+
+        void BindInput()
+        {
             // Create input bindings since the auto generatd code have some errors
             var action = new InputAction(
                     type: InputActionType.PassThrough,
                     binding: "<Gamepad>/start");
 
-            action.performed +=
+            action.started +=
                 ctx =>
                 {
                     var button = (ButtonControl)ctx.control;
@@ -70,10 +82,10 @@ namespace MayoMatic
             action.Enable();
 
             var actionA = new InputAction(
-                    type: InputActionType.PassThrough,
+                    type: InputActionType.Button,
                     binding: "<Gamepad>/buttonSouth");
 
-            actionA.performed +=
+            actionA.started +=
                 ctx =>
                 {
                     var button = (ButtonControl)ctx.control;
@@ -83,10 +95,10 @@ namespace MayoMatic
             actionA.Enable();
 
             var actionY = new InputAction(
-                    type: InputActionType.PassThrough,
+                    type: InputActionType.Button,
                     binding: "<Gamepad>/buttonNorth");
 
-            actionY.performed +=
+            actionY.started +=
                 ctx =>
                 {
                     var button = (ButtonControl)ctx.control;
@@ -94,13 +106,25 @@ namespace MayoMatic
                 };
 
             actionY.Enable();
+
+            var actionB = new InputAction(
+                        type: InputActionType.Button,
+                        binding: "<Gamepad>/buttonEast");
+
+            actionB.started +=
+                ctx =>
+                {
+                    var button = (ButtonControl)ctx.control;
+                    m_BIsPressed = button.wasPressedThisFrame;
+                };
+
+            actionB.Enable();
         }
 
         // Start is called before the first frame update
         void Start()
         {
             GoToBeginingState();
-            m_PressStartGO.SetActive(true);
         }
 
         // Update is called once per frame
@@ -120,26 +144,47 @@ namespace MayoMatic
                 case GameState.Finished:
                     UpdateFinished();
                     break;
+                case GameState.Paused:
+                    UpdatePaused();
+                    break;
             }
+
+            m_AIsPressed = false;
+            m_YIsPressed = false;
+            m_BIsPressed = false;
         }
 
         void GoToBeginingState()
         {
             m_State = GameState.Beginning;
+
+            ResetAllVisible();
+
+            m_TitleMenu?.SetActive(true);
         }
 
         void UpdateBeginning()
         {
-            if (m_StartIsPressed)
+            if (m_StartIsPressed || m_AIsPressed)
             {
                 GoToCountdownState();
-                m_PressStartGO.SetActive(false);
             }
 
+            if (m_BIsPressed)
+            {
+                ReturnToMainMenu();
+            }
+
+            if(m_YIsPressed)
+            {
+                Debug.LogWarning("Tutorial -> Not implemented");
+            }
         }
 
         void GoToCountdownState()
         {
+            ResetAllVisible();
+
             m_State = GameState.Countdown;
             m_SoundManager.StartMusic();
             m_Countdown.StartCountdown(3);
@@ -156,6 +201,8 @@ namespace MayoMatic
 
         void GoToPlayingState()
         {
+            ResetAllVisible();
+
             m_State = GameState.Playing;
             m_ScoreManager.StartScoring();
         }
@@ -171,6 +218,10 @@ namespace MayoMatic
 
         void GoToFinishedState()
         {
+            ResetAllVisible();
+
+            m_FinalScoreDisplay.gameObject.SetActive(true);
+
             m_State = GameState.Finished;
             m_Bowl.StopBowl();
             m_ScoreManager.StopScoring();
@@ -181,13 +232,39 @@ namespace MayoMatic
         {
             if (m_AIsPressed)
             {
-                Debug.Log("Go back to menu");
+                ReturnToMainMenu();
             }
 
             if (m_YIsPressed)
             {
-                Debug.Log("Restart");
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
+        }
+
+        void GoToPausedState()
+        {
+            ResetAllVisible();
+
+            m_PauseMenu?.SetActive(true);
+        }
+
+        void UpdatePaused()
+        {
+
+        }
+
+        void ResetAllVisible()
+        {
+            m_PauseMenu?.SetActive(false);
+            m_TitleMenu?.SetActive(false);
+            m_FinalScoreDisplay.gameObject.SetActive(false);
+            //TODO: add the joystick help disable;
+        }
+
+        void ReturnToMainMenu()
+        {
+            //INTEGRATION
+            Debug.Log("On retourne au bus!");
         }
     }
 }
