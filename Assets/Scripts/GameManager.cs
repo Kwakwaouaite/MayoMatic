@@ -236,9 +236,12 @@ namespace MayoMatic
             m_FinalScoreDisplay.gameObject.SetActive(true);
 
             m_State = GameState.Finished;
+
             m_Bowl.StopBowl();
             m_ScoreManager.StopScoring();
             m_FinalScoreDisplay.DisplayScore(m_IngredientManager.GetSuceededNotes(), m_IngredientManager.GetNoteCount(), 100 - m_ScoreManager.GetAverageGap() * 100);
+
+            OnSuccess();
         }
 
         void UpdateFinished()
@@ -331,8 +334,14 @@ namespace MayoMatic
 
         void ReturnToMainMenu()
         {
-            //INTEGRATION
+            //INTEGRATION : Go back to menu
             Debug.Log("On retourne au bus!");
+        }
+
+        void OnSuccess()
+        {
+            //INTEGRATION : We can validate MayoMatic as completed
+            Debug.Log("C'est ici qu'on valide MayoMatic!");
         }
     }
 }
