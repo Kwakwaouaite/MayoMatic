@@ -5024,7 +5024,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "D\xE8s qu'il y en a un au dessus du centre du saladier, appuie sur le
-    boutton correspondant pour l'ajouter.\n(Astuce : la lettre deviendra blanche)"
+    bouton correspondant pour l'ajouter.\n(Astuce : la lettre deviendra blanche)"
 --- !u!222 &1960584287
 CanvasRenderer:
   m_ObjectHideFlags: 0
