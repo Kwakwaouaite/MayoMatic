@@ -35,6 +35,9 @@ namespace MayoMatic
         private GameObject m_PauseMenu;
 
         [SerializeField]
+        private GameObject m_TutorialMenu;
+
+        [SerializeField]
         private ScoreManager m_ScoreManager;
 
         [SerializeField]
@@ -49,7 +52,8 @@ namespace MayoMatic
             Countdown,
             Playing,
             Finished,
-            Paused
+            Paused,
+            Tutorial
         }
 
         private GameState m_State;
@@ -147,6 +151,9 @@ namespace MayoMatic
                 case GameState.Paused:
                     UpdatePaused();
                     break;
+                case GameState.Tutorial:
+                    UpdateTutorial();
+                    break;
             }
 
             m_AIsPressed = false;
@@ -177,6 +184,7 @@ namespace MayoMatic
 
             if(m_YIsPressed)
             {
+                GoToTutorialState();
                 Debug.LogWarning("Tutorial -> Not implemented");
             }
         }
@@ -243,6 +251,7 @@ namespace MayoMatic
 
         void GoToPausedState()
         {
+            m_State = GameState.Paused;
             ResetAllVisible();
 
             m_PauseMenu?.SetActive(true);
@@ -253,10 +262,27 @@ namespace MayoMatic
 
         }
 
+        void GoToTutorialState()
+        {
+            m_State = GameState.Tutorial;
+            ResetAllVisible();
+
+            m_TutorialMenu?.SetActive(true);
+        }
+
+        void UpdateTutorial()
+        {
+            if (m_AIsPressed)
+            {
+                GoToBeginingState();
+            }
+        }
+
         void ResetAllVisible()
         {
             m_PauseMenu?.SetActive(false);
             m_TitleMenu?.SetActive(false);
+            m_TutorialMenu?.SetActive(false);
             m_FinalScoreDisplay.gameObject.SetActive(false);
             //TODO: add the joystick help disable;
         }
