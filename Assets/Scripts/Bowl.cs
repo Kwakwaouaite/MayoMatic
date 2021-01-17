@@ -24,6 +24,7 @@ namespace MayoMatic
         float m_NoInputJoystickTime = 0;
 
         bool m_HelpIsDisplayed = false;
+        public bool m_HelpIsEnabled = false; 
 
         [SerializeField]
         Transform m_PlayerTransform;
@@ -116,12 +117,33 @@ namespace MayoMatic
 
         private void DisplayHelp()
         {
+            if(!m_HelpIsEnabled)
+            {
+                return;
+            }
+
             if (!m_HelpIsDisplayed && m_NoInputJoystickTime > m_TimeBeforeShowingHelp)
             {
                 ShowHelp(true);
             }
 
             m_NoInputJoystickTime += Time.deltaTime;
+        }
+
+
+        public void SetHelpEnabled(bool enable)
+        {
+            if (enable == m_HelpIsEnabled)
+            {
+                return;
+            }
+
+            m_HelpIsEnabled = enable;
+
+            if(!m_HelpIsEnabled)
+            {
+                ShowHelp(false);
+            }
         }
 
         private void ShowHelp( bool state)

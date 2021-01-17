@@ -168,6 +168,7 @@ namespace MayoMatic
             ResetAllVisible();
 
             m_TitleMenu?.SetActive(true);
+            m_Bowl?.SetHelpEnabled(false);
         }
 
         void UpdateBeginning()
@@ -212,7 +213,9 @@ namespace MayoMatic
             ResetAllVisible();
 
             m_State = GameState.Playing;
+
             m_ScoreManager.StartScoring();
+            m_Bowl?.SetHelpEnabled(true);
         }
 
         void UpdatePlaying()
@@ -284,6 +287,7 @@ namespace MayoMatic
             m_TitleMenu?.SetActive(false);
             m_TutorialMenu?.SetActive(false);
             m_FinalScoreDisplay.gameObject.SetActive(false);
+            m_Bowl?.SetHelpEnabled(false);
             //TODO: add the joystick help disable;
         }
 
