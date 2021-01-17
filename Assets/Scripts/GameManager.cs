@@ -284,6 +284,7 @@ namespace MayoMatic
 
                 if (m_TutorialMenus.Length <= m_CurrentTutorial)
                 {
+                    m_Bowl.StopBowl();
                     GoToBeginingState();
                 }
                 else
@@ -296,11 +297,21 @@ namespace MayoMatic
 
         void ChangePageTutorial(int index)
         {
-            int newIndex = Mathf.Clamp(index, 0, m_TutorialMenus.Length);
+            int newIndex = Mathf.Clamp(index, 0, m_TutorialMenus.Length - 1);
 
             ResetAllVisible();
 
             m_TutorialMenus[index]?.SetActive(true);
+
+
+            if (newIndex == m_TutorialMenus.Length - 1)
+            {
+                m_Bowl.StartBowl();
+            }
+            else
+            {
+                m_Bowl.StopBowl();
+            }
         }
 
         void ResetAllVisible()
